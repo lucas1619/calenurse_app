@@ -1,0 +1,48 @@
+import 'package:flutter/foundation.dart';
+import 'package:calenurse_app/domain/user/user.dart';
+import 'package:calenurse_app/services/auth_service.dart';
+
+class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
+  final User _user = User(
+      id: '1',
+      name: 'Dana Vallejos',
+      email: 'enfermera@acalenurse.pe',
+      type: 'Nurse',
+      area: 'Ginecologia',
+      photoUrl:
+          'https://media.licdn.com/dms/image/C4E03AQHRj-FW4YyW0w/profile-displayphoto-shrink_200_200/0/1656041131139?e=2147483647&v=beta&t=XJvJbfhzzAJDAMAGngiEbfB0hcQ99vQP6OjO76HrsaI');
+  User get user => _user;
+
+  void setUser(User user) {
+    _user.id = user.id;
+    _user.name = user.name;
+    _user.email = user.email;
+    _user.type = user.type;
+    _user.area = user.area;
+    _user.photoUrl = user.photoUrl;
+    notifyListeners();
+  }
+
+  Future<bool> login(String username, String password) async {
+    try {
+      AuthService authService = AuthService();
+      User user = await authService.login(username, password);
+      setUser(user);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool register(
+      String name, String email, String password, String type, String area) {
+    AuthService authService = AuthService();
+    return authService.register(name, email, password, type, area);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<User>('user', _user));
+  }
+}

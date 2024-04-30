@@ -1,3 +1,4 @@
+import 'package:calenurse_app/pages/home/home_boss.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4894FE)),
         useMaterial3: true,
       ),
-      initialRoute: '/login',
+      initialRoute: HomeBossPage.route,
       routes: routes,
     );
   }

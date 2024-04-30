@@ -1,3 +1,5 @@
+import 'package:calenurse_app/pages/home/home_boss.dart';
+import 'package:calenurse_app/pages/schedule/schedule_boss.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -51,9 +53,11 @@ class RocioNavigationBarState extends State<RocioNavigationBar> {
             onTabChange: (index) {
               setState(() {
                 if (index == 0) {
-                  Navigator.pushNamed(context, '/home');
+                  //Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, HomeBossPage.route);
                 } else if (index == 1) {
-                  Navigator.pushNamed(context, '/schedule');
+                  //Navigator.pushNamed(context, '/schedule');
+                  Navigator.pushNamed(context, ScheduleBossPage.route);
                 } else if (index == 2) {
                   Navigator.pushNamed(context, '/notifications');
                 } else if (index == 3) {

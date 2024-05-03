@@ -86,7 +86,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 40,
                 ),
                 DangerButton(
-                    action: (BuildContext context) {},
+                    action: (BuildContext context) {
+                      Navigator.pushNamed(context, '/login');
+                    },
                     label: 'Cerrar sesión',
                     parentContext: context),
                 const SizedBox(

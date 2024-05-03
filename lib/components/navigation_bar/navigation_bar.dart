@@ -53,11 +53,11 @@ class RocioNavigationBarState extends State<RocioNavigationBar> {
             onTabChange: (index) {
               setState(() {
                 if (index == 0) {
-                  //Navigator.pushNamed(context, '/home');
-                  Navigator.pushNamed(context, HomeBossPage.route);
+                  Navigator.pushNamed(context, '/home');
+                  //Navigator.pushNamed(context, HomeBossPage.route);
                 } else if (index == 1) {
-                  //Navigator.pushNamed(context, '/schedule');
-                  Navigator.pushNamed(context, ScheduleBossPage.route);
+                  Navigator.pushNamed(context, '/schedule');
+                  //Navigator.pushNamed(context, ScheduleBossPage.route);
                 } else if (index == 2) {
                   Navigator.pushNamed(context, '/notifications');
                 } else if (index == 3) {

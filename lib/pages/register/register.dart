@@ -5,21 +5,31 @@ import 'package:calenurse_app/components/text_field/primary_text_field.dart';
 import 'package:calenurse_app/components/select/primary_select.dart';
 import 'package:calenurse_app/components/button/primary_button.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _usernameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   // on login button pressed
   Future<void> _register(BuildContext context) async {
     // Add your onPressed logic here
   }
+
   void _on_changed_user_type(value) {
     // Add your onChanged logic here
   }
 
+  String type = 'Enfermera';
+  String special = 'Ginecología';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,21 +81,27 @@ class SignupPage extends StatelessWidget {
                             obscureText: true),
                         const SizedBox(height: 16.0),
                         PrimarySelect(
-                          value: 'Enfermera',
+                          value: type,
                           items: const ['Enfermera', 'Jefa de Enfermera'],
-                          // ValueChanged<String?> onChanged;
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              type = value!;
+                            });
+                          },
                         ),
                         const SizedBox(height: 16.0),
                         PrimarySelect(
-                          value: 'Ginecología',
+                          value: special,
                           items: const [
                             'Ginecología',
                             'Cardiología',
                             'Oncología'
                           ],
-                          // ValueChanged<String?> onChanged;
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              special = value!;
+                            });
+                          },
                         ),
                         const SizedBox(height: 16.0),
                         PrimaryButton(

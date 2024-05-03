@@ -13,11 +13,16 @@ class LoginPage extends StatelessWidget {
   // Future<void> _login(BuildContext context) async {
   Future<void> _login(BuildContext context) async {
     // Add your onPressed logic here
-    bool isLogin = await Provider.of<AuthStore>(context, listen: false)
-        .login(_usernameController.text, _passwordController.text);
+    AuthStore authStore = Provider.of<AuthStore>(context, listen: false);
+    bool isLogin = await authStore.login(
+        _usernameController.text, _passwordController.text);
     if (isLogin) {
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/home');
+      if (authStore.user.type == 'Enfermera') {
+        Navigator.pushNamed(context, '/home');
+      } else {
+        Navigator.pushNamed(context, '/home_boss');
+      }
     } else {
       // cpñpr red
       // ignore: use_build_context_synchronously

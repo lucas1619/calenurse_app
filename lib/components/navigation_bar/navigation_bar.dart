@@ -2,6 +2,8 @@ import 'package:calenurse_app/pages/home/home_boss.dart';
 import 'package:calenurse_app/pages/schedule/schedule_boss.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:calenurse_app/store/auth.dart';
 
 class RocioNavigationBar extends StatefulWidget {
   final int selectedIndex;
@@ -18,6 +20,7 @@ class RocioNavigationBar extends StatefulWidget {
 class RocioNavigationBarState extends State<RocioNavigationBar> {
   @override
   Widget build(BuildContext context) {
+    final authStore = Provider.of<AuthStore>(context);
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -53,11 +56,17 @@ class RocioNavigationBarState extends State<RocioNavigationBar> {
             onTabChange: (index) {
               setState(() {
                 if (index == 0) {
-                  Navigator.pushNamed(context, '/home');
-                  //Navigator.pushNamed(context, HomeBossPage.route);
+                  if (authStore.user.type == 'Enfermera') {
+                    Navigator.pushNamed(context, '/home');
+                  } else {
+                    Navigator.pushNamed(context, HomeBossPage.route);
+                  }
                 } else if (index == 1) {
-                  Navigator.pushNamed(context, '/schedule');
-                  //Navigator.pushNamed(context, ScheduleBossPage.route);
+                  if (authStore.user.type == 'Enfermera') {
+                    Navigator.pushNamed(context, '/schedule');
+                  } else {
+                    Navigator.pushNamed(context, ScheduleBossPage.route);
+                  }
                 } else if (index == 2) {
                   Navigator.pushNamed(context, '/notifications');
                 } else if (index == 3) {

@@ -1,10 +1,12 @@
 import 'package:calenurse_app/components/card/boss_day_workers.dart';
+import 'package:calenurse_app/store/auth.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:calenurse_app/components/navigation_bar/navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HomeBossPage extends StatefulWidget {
   const HomeBossPage({super.key});
@@ -16,7 +18,7 @@ class HomeBossPage extends StatefulWidget {
 class _HomeBossPageState extends State<HomeBossPage> {
   @override
   Widget build(BuildContext context) {
-    //final authStore = Provider.of<AuthStore>(context);
+    final authStore = Provider.of<AuthStore>(context);
     DateTime _selectedDate = DateTime.now();
     return Scaffold(
       bottomNavigationBar: const RocioNavigationBar(
@@ -31,7 +33,7 @@ class _HomeBossPageState extends State<HomeBossPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
@@ -46,7 +48,7 @@ class _HomeBossPageState extends State<HomeBossPage> {
                             ),
                           ),
                           Text(
-                            'Dana Vallejos',
+                            authStore.user.name,
                             style: TextStyle(
                               color: Color(0xFF264A7D),
                               fontWeight: FontWeight.bold,
@@ -58,15 +60,13 @@ class _HomeBossPageState extends State<HomeBossPage> {
                       ),
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage:
-                            AssetImage('assets/images/photo_holder.png'),
+                        backgroundImage: AssetImage(authStore.user.photoUrl),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
-                  Container(
 
+                  Container(
                     child: DatePicker(
                       DateTime.now(),
                       height: 100,
@@ -143,7 +143,6 @@ class _HomeBossPageState extends State<HomeBossPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         
                           Text(
                             'Horario ${DateFormat('EEEE').format(DateTime.now())}',
                             style: const TextStyle(

@@ -1,4 +1,5 @@
 import 'package:calenurse_app/components/select/primary_select.dart';
+import 'package:calenurse_app/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:calenurse_app/components/card/schedule_card_nurse.dart';
 import 'package:flutter/widgets.dart';
@@ -85,7 +86,38 @@ class _SchedulePageState extends State<SchedulePage> {
                   heroTag: UniqueKey(),
                   backgroundColor: const Color(0xff4894FE),
                   elevation: 0,
-                  onPressed: () {},
+                  onPressed: () {
+                    Api api = Api();
+                    var turnDict = {
+                      'Libre': 'free',
+                      'Mañana': 'day',
+                      'Tarde': 'evening',
+                      'Noche': 'night',
+                    };
+                    api.post("/desired-schedule/register", {
+                      "shift": turnDict[turn],
+                      "date": dateCtrl.text,
+                    }).then((value) => {
+                          if (value.statusCode == 201)
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Horario creado correctamente'),
+                                  backgroundColor: Color(0xff4894FE),
+                                ),
+                              ),
+                            }
+                          else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Error al crear horario'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              ),
+                            }
+                        });
+                  },
                   label: const Text('Crear horario',
                       style: TextStyle(
                           color: Colors.white,

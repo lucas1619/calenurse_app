@@ -1,3 +1,4 @@
+import 'package:calenurse_app/services/api.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:calenurse_app/components/card/schedule_card_nurse.dart';
@@ -20,6 +21,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
+
+    Api api = Api();
+    var response = api.get('/schedule/own-schedule');
+    print(response);
 
     return Scaffold(
       bottomNavigationBar: const RocioNavigationBar(
@@ -49,42 +54,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // /  Row(
-                  // /    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // /    children: [
-                  // /      Column(
-                  // /        crossAxisAlignment: CrossAxisAlignment.start,
-                  // /        children: [
-                  // /          const Text(
-                  // /            'Hola', // Use state variable for greeting
-                  // /            style: TextStyle(
-                  // /              color: Color(0xFF8696BB),
-                  // /              fontSize: 18.0,
-                  // /              fontFamily: 'Poppins',
-                  // /            ),
-                  // /          ),
-                  // /          Text(
-                  // /            authStore.user.name,
-                  // /            style: const TextStyle(
-                  // /              color: Color(0xFF264A7D),
-                  // /              fontWeight: FontWeight.bold,
-                  // /              fontSize: 24.0,
-                  // /              fontFamily: 'Poppins',
-                  // /            ),
-                  // /          ),
-                  // /        ],
-                  // /      ),
-                  // /      Column(
-                  // /        children: [
-                  // /          CircleAvatar(
-                  // /            radius: 40,
-                  // /            backgroundImage:
-                  // /                NetworkImage(authStore.user.photoUrl),
-                  // /          )
-                  // /        ],
-                  // /      ),
-                  // /    ],
-                  // /  ),
                   DatePicker(
                     DateTime.now(),
                     height: 100,
@@ -119,17 +88,6 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ListView(
                       children: const [
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
-                        ScheduleCardNurse(),
                         ScheduleCardNurse(),
                       ],
                     ),

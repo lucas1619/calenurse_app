@@ -11,6 +11,7 @@ class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
       area: 'Ginecologia',
       photoUrl:
           'https://media.licdn.com/dms/image/C4E03AQHRj-FW4YyW0w/profile-displayphoto-shrink_200_200/0/1656041131139?e=2147483647&v=beta&t=XJvJbfhzzAJDAMAGngiEbfB0hcQ99vQP6OjO76HrsaI');
+
   User get user => _user;
 
   void setUser(User user) {
@@ -26,7 +27,8 @@ class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
   Future<bool> login(String username, String password) async {
     try {
       AuthService authService = AuthService();
-      User user = await authService.login(username, password);
+      User user;
+      user = await authService.login(username, password);
       setUser(user);
       return true;
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:calenurse_app/components/text_field/primary_text_field.dart';
+import 'package:calenurse_app/services/api.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleBossRequerimentTab extends StatefulWidget {
@@ -76,7 +77,33 @@ class _ScheduleBossRequerimentTabState
               child: FloatingActionButton.extended(
                 backgroundColor: const Color(0xff4894FE),
                 elevation: 0,
-                onPressed: () {},
+                onPressed: () {
+                  Api api = Api();
+                  api.post("/schedule/make", {
+                    "day": morningCtrl.text,
+                    "evening": afternoonCtrl.text,
+                    "night": nightCtrl.text,
+                  }).then((value) => {
+                        if (value.statusCode == 200)
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Horario generado correctamente'),
+                                backgroundColor: Color(0xff4894FE),
+                              ),
+                            ),
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error al generar horario'),
+                                backgroundColor: Colors.red,
+                              ),
+                            ),
+                          }
+                      });
+                },
                 label: const Text('Generar horario',
                     style: TextStyle(
                         color: Colors.white,

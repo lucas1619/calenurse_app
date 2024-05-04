@@ -1,5 +1,6 @@
 // make an example of a login page
 
+import 'package:calenurse_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:calenurse_app/components/text_field/primary_text_field.dart';
 import 'package:calenurse_app/components/select/primary_select.dart';
@@ -17,11 +18,40 @@ class _SignupPageState extends State<SignupPage> {
 
   final TextEditingController _usernameController = TextEditingController();
 
+  final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   // on login button pressed
   Future<void> _register(BuildContext context) async {
-    // Add your onPressed logic here
+    final name = _nameController.text;
+    final username = _usernameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final isBoss = type == 'Jefa de Enfermera';
+    final areaId = special == 'Ginecología'
+        ? '606d91ce-0776-4693-a3a6-f52090ca753b'
+        : 'd3057e1a-bedc-4963-8bcd-41dc3de509f2';
+    final body = {
+      'username': username,
+      'password': password,
+      'name': name,
+      'age': 20,
+      'email': email,
+      'isBoss': isBoss,
+      'areaId': areaId
+    };
+    AuthService authService = AuthService();
+    final response = await authService.register(body);
+    if (response) {
+      Navigator.pushNamed(context, '/login');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error al registrar el usuario'),
+        ),
+      );
+    }
   }
 
   void _on_changed_user_type(value) {
@@ -71,6 +101,11 @@ class _SignupPageState extends State<SignupPage> {
                         const SizedBox(height: 16.0),
                         PrimaryTextField(
                             controller: _usernameController,
+                            labelText: 'Nombre de usuario',
+                            hintText: 'Usuario'),
+                        const SizedBox(height: 16.0),
+                        PrimaryTextField(
+                            controller: _emailController,
                             labelText: 'Email',
                             hintText: 'Email'),
                         const SizedBox(height: 16.0),
@@ -94,8 +129,7 @@ class _SignupPageState extends State<SignupPage> {
                           value: special,
                           items: const [
                             'Ginecología',
-                            'Cardiología',
-                            'Oncología'
+                            'Obstetricia',
                           ],
                           onChanged: (value) {
                             setState(() {

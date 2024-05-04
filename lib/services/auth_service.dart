@@ -21,8 +21,14 @@ class AuthService extends Api {
   }
 
   // Future<User> register(String name, String username, String password) async {
-  bool register(
-      String name, String email, String password, String type, String area) {
-    return true;
+  bool register(Map<String, Object> body) {
+    post('/auth/signup', body).then((response) {
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return false;
   }
 }

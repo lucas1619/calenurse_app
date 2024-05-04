@@ -34,12 +34,6 @@ class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  bool register(
-      String name, String email, String password, String type, String area) {
-    AuthService authService = AuthService();
-    return authService.register(name, email, password, type, area);
-  }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class Api {
   // TODO: Cambiar por la dirección de la API
-  static const String _baseUrl = 'http://3.208.8.204:3000/api/v1';
+  static const String _baseUrl = 'https://calenurse.dns-dynamic.net/api/v1';
 
   Future<http.Response> get(String path) async {
     final headers = {'Content-Type': 'application/json'};

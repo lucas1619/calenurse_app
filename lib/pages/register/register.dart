@@ -1,5 +1,5 @@
-// make an example of a login page
-
+import 'package:calenurse_app/domain/area/area.dart';
+import 'package:calenurse_app/services/area_service.dart';
 import 'package:calenurse_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:calenurse_app/components/text_field/primary_text_field.dart';
@@ -15,23 +15,44 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _usernameController = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
-  // on login button pressed
+  List<Area> areas = [Area(id: "", name: "")];
+  String type = 'Enfermera';
+  Area special = Area(id: "", name: "");
+
+  @override
+  void initState() {
+    super.initState();
+    _onLoadComponent();
+  }
+
+  Future<void> _onLoadComponent() async {
+    AreaService areaService = AreaService();
+    try {
+      final loadedAreas = await areaService.getAllAreas();
+      setState(() {
+        areas = loadedAreas;
+        special = loadedAreas[0];
+      });
+    } catch (error) {
+      // Handle errors here, e.g., show a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load areas: $error')),
+      );
+    }
+  }
+
+  // on register button pressed
   Future<void> _register(BuildContext context) async {
     final name = _nameController.text;
     final username = _usernameController.text;
     final email = _emailController.text;
     final password = _passwordController.text;
     final isBoss = type == 'Jefa de Enfermera';
-    final areaId = special == 'Ginecología'
-        ? '606d91ce-0776-4693-a3a6-f52090ca753b'
-        : 'd3057e1a-bedc-4963-8bcd-41dc3de509f2';
+    final areaId = special.id;
     final body = {
       'username': username,
       'password': password,
@@ -39,7 +60,7 @@ class _SignupPageState extends State<SignupPage> {
       'age': 20,
       'email': email,
       'isBoss': isBoss,
-      'areaId': areaId
+      'areaId': areaId,
     };
     AuthService authService = AuthService();
     final response = await authService.register(body);
@@ -54,127 +75,124 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  void _on_changed_user_type(value) {
-    // Add your onChanged logic here
-  }
-
-  String type = 'Enfermera';
-  String special = 'Ginecología';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Padding(
-      padding: const EdgeInsets.only(top: 0),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 150.0,
-                  height: 150.0,
-                ),
-                const SizedBox(height: 5.0),
-                const Text(
-                  'Registrate',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40.0, vertical: 25.0),
-                    child: Column(
-                      children: [
-                        PrimaryTextField(
-                            controller: _nameController,
-                            labelText: 'Nombre',
-                            hintText: 'Nombre'),
-                        const SizedBox(height: 16.0),
-                        PrimaryTextField(
-                            controller: _usernameController,
-                            labelText: 'Nombre de usuario',
-                            hintText: 'Usuario'),
-                        const SizedBox(height: 16.0),
-                        PrimaryTextField(
-                            controller: _emailController,
-                            labelText: 'Email',
-                            hintText: 'Email'),
-                        const SizedBox(height: 16.0),
-                        PrimaryTextField(
-                            controller: _passwordController,
-                            labelText: 'Crea una Contraseña',
-                            hintText: 'Crea una Contraseña',
-                            obscureText: true),
-                        const SizedBox(height: 16.0),
-                        PrimarySelect(
-                          value: type,
-                          items: const ['Enfermera', 'Jefa de Enfermera'],
-                          onChanged: (value) {
-                            setState(() {
-                              type = value!;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        PrimarySelect(
-                          value: special,
-                          items: const [
-                            'Ginecología',
-                            'Obstetricia',
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              special = value!;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        PrimaryButton(
-                          action: _register,
-                          label: 'Registrate',
-                          parentContext: context,
-                        ),
-                        const SizedBox(height: 25.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              '¿Ya tienes una cuenta?',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/login');
-                              },
-                              child: const Text(
-                                'Inicia Sesión',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 0),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: 150.0,
+                      height: 150.0,
                     ),
-                  ),
+                    const SizedBox(height: 5.0),
+                    const Text(
+                      'Registrate',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40.0, vertical: 25.0),
+                        child: Column(
+                          children: [
+                            PrimaryTextField(
+                              controller: _nameController,
+                              labelText: 'Nombre',
+                              hintText: 'Nombre',
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimaryTextField(
+                              controller: _usernameController,
+                              labelText: 'Nombre de usuario',
+                              hintText: 'Usuario',
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimaryTextField(
+                              controller: _emailController,
+                              labelText: 'Email',
+                              hintText: 'Email',
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimaryTextField(
+                              controller: _passwordController,
+                              labelText: 'Crea una Contraseña',
+                              hintText: 'Crea una Contraseña',
+                              obscureText: true,
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimarySelect(
+                              value: type,
+                              items: const ['Enfermera', 'Jefa de Enfermera'],
+                              onChanged: (value) {
+                                setState(() {
+                                  type = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimarySelect(
+                              value: special,
+                              items: areas,
+                              onChanged: (value) {
+                                setState(() {
+                                  special = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            PrimaryButton(
+                              action: _register,
+                              label: 'Registrate',
+                              parentContext: context,
+                            ),
+                            const SizedBox(height: 25.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  '¿Ya tienes una cuenta?',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/login');
+                                  },
+                                  child: const Text(
+                                    'Inicia Sesión',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    )));
+    );
   }
 }

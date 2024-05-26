@@ -74,8 +74,8 @@ class LoginPage extends StatelessWidget {
                         children: [
                           PrimaryTextField(
                               controller: _usernameController,
-                              labelText: 'Email',
-                              hintText: 'Email'),
+                              labelText: 'Nombre de usuario',
+                              hintText: 'Nombre de usuario'),
                           const SizedBox(height: 16.0),
                           PrimaryTextField(
                               controller: _passwordController,

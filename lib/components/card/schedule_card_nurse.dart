@@ -1,20 +1,29 @@
 import 'package:calenurse_app/components/text_field/primary_text_field.dart';
+import 'package:calenurse_app/domain/shift/shift_enum.dart';
 import 'package:calenurse_app/store/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:calenurse_app/domain/shift/generated_shift.dart';
 
 class ScheduleCardNurse extends StatefulWidget {
-  const ScheduleCardNurse({super.key});
+  final GeneratedShift shift; // Declare shift as a final property
+  const ScheduleCardNurse(
+      {super.key, required this.shift}); // Pass shift as a required parameter
 
   @override
-  State<ScheduleCardNurse> createState() => _ScheduleCardNurseState();
+  // ignore: no_logic_in_create_state
+  State<ScheduleCardNurse> createState() =>
+      // ignore: no_logic_in_create_state
+      _ScheduleCardNurseState(shift: shift);
 }
 
 class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
+  final GeneratedShift shift;
+  _ScheduleCardNurseState({required this.shift});
+
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
-
     return Column(
       children: [
         Container(
@@ -28,34 +37,29 @@ class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   children: [
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.schedule_outlined,
                           color: Color(0xFF4894FE),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Tarde",
-                                style: TextStyle(
+                            Text(translateShiftToSpanish(shift.shift),
+                                style: const TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF3F4448))),
-                            Text("12/05/2023",
-                                style: TextStyle(
+                            Text(shift.date.toString(),
+                                style: const TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Poppins',
                                     color: Color(0xFF3F4448))),
-                            Text("12:00 - 8:00",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFF3F4448)))
                           ],
                         )
                       ],

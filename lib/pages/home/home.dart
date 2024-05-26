@@ -1,4 +1,7 @@
+import 'package:calenurse_app/domain/shift/generated_shift.dart';
+import 'package:calenurse_app/domain/shift/shift_enum.dart';
 import 'package:calenurse_app/services/api.dart';
+import 'package:calenurse_app/services/shift_service.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:calenurse_app/components/card/schedule_card_nurse.dart';
@@ -16,15 +19,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DateTime _selectedDate = DateTime.now();
+  List<GeneratedShift> shifts = [
+    GeneratedShift(
+        date: DateTime.now(), id: "asdasd-asdas-asdas", shift: ShiftEnum.day)
+  ];
+  DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // Call onChangeDate function here with initial date and nurseId
+    final authStore = Provider.of<AuthStore>(context, listen: false);
+    onChangeDate(DateTime.now(), authStore.user.id);
+  }
+
+  Future<void> onChangeDate(DateTime date, String nurseId) async {
+    ShiftService shiftService = ShiftService();
+    List<GeneratedShift> loadedShifts =
+        await shiftService.getShift(nurseId, date);
+    setState(() {
+      shifts = [];
+      selectedDate = date;
+    });
+    setState(() {
+      shifts = loadedShifts;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
-
-    Api api = Api();
-    var response = api.get('/schedule/own-schedule');
-    print(response);
 
     return Scaffold(
       bottomNavigationBar: const RocioNavigationBar(
@@ -69,9 +93,8 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey),
-                    onDateChange: (date) {
-                      _selectedDate = date;
-                    },
+                    onDateChange: (date) =>
+                        {onChangeDate(date, authStore.user.id)},
                   ),
                   const SizedBox(height: 20.0),
                   const Text(
@@ -87,9 +110,15 @@ class _HomePageState extends State<HomePage> {
                   // scrollable list of schedules
                   Expanded(
                     child: ListView(
-                      children: const [
-                        ScheduleCardNurse(),
-                      ],
+                      children: shifts
+                          .map((
+                            e,
+                          ) =>
+                              ScheduleCardNurse(
+                                shift: e,
+                                key: Key(e.id),
+                              ))
+                          .toList(),
                     ),
                   ),
                 ],

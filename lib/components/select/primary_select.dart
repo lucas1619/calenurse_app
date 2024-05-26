@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class PrimarySelect extends StatefulWidget {
-  final String value;
-  final List<String> items;
-  ValueChanged<String?> onChanged;
+class PrimarySelect<T> extends StatefulWidget {
+  final T value;
+  final List<T> items;
+  ValueChanged<T?> onChanged;
 
   PrimarySelect({
     super.key,
@@ -14,10 +14,10 @@ class PrimarySelect extends StatefulWidget {
   });
 
   @override
-  PrimarySelectState createState() => PrimarySelectState();
+  PrimarySelectState<T> createState() => PrimarySelectState<T>();
 }
 
-class PrimarySelectState extends State<PrimarySelect> {
+class PrimarySelectState<T> extends State<PrimarySelect<T>> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -26,22 +26,21 @@ class PrimarySelectState extends State<PrimarySelect> {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            // background color
             color: const Color(0xFFE9F3FF),
           ),
           padding: const EdgeInsets.symmetric(
             vertical: 0.0,
             horizontal: 20.0,
           ),
-          child: DropdownButton<String>(
+          child: DropdownButton<T>(
             underline: Container(),
             isExpanded: true,
             value: widget.value,
             onChanged: widget.onChanged,
-            items: widget.items.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
+            items: widget.items.map<DropdownMenuItem<T>>((T value) {
+              return DropdownMenuItem<T>(
                 value: value,
-                child: Text(value),
+                child: Text(value.toString()),
               );
             }).toList(),
           ),

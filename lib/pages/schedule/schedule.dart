@@ -94,15 +94,18 @@ class _SchedulePageState extends State<SchedulePage> {
                       'Tarde': 'evening',
                       'Noche': 'night',
                     };
-                    api.post("/desired-schedule/register", {
+                    api.post("/shift/desired", {
                       "shift": turnDict[turn],
-                      "date": dateCtrl.text,
+                      "date": DateFormat('yyyy-MM-dd').format(
+                          DateFormat('dd/MM/yyyy').parse(dateCtrl.text)),
+                      "nurse_id": authStore.user.id
                     }).then((value) => {
                           if (value.statusCode == 201)
                             {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Horario creado correctamente'),
+                                  content:
+                                      Text('Horario solicitado correctamente'),
                                   backgroundColor: Color(0xff4894FE),
                                 ),
                               ),
@@ -111,7 +114,8 @@ class _SchedulePageState extends State<SchedulePage> {
                             {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Error al crear horario'),
+                                  content: Text(
+                                      'Error al crear horario, recuerda que solo puedes solicitar 1 turno por dia'),
                                   backgroundColor: Colors.red,
                                 ),
                               ),

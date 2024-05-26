@@ -1,6 +1,8 @@
 import 'package:calenurse_app/components/text_field/primary_text_field.dart';
 import 'package:calenurse_app/services/api.dart';
+import 'package:calenurse_app/store/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleBossRequerimentTab extends StatefulWidget {
   const ScheduleBossRequerimentTab({super.key});
@@ -17,6 +19,8 @@ class _ScheduleBossRequerimentTabState
   final nightCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authStore = Provider.of<AuthStore>(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
@@ -79,12 +83,13 @@ class _ScheduleBossRequerimentTabState
                 elevation: 0,
                 onPressed: () {
                   Api api = Api();
-                  api.post("/schedule/make", {
+                  api.post("/shift/generate", {
                     "day": morningCtrl.text,
                     "evening": afternoonCtrl.text,
                     "night": nightCtrl.text,
+                    "nurse_id": authStore.user.id
                   }).then((value) => {
-                        if (value.statusCode == 200)
+                        if (value.statusCode == 201)
                           {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

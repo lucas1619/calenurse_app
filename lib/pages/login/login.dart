@@ -93,7 +93,7 @@ class LoginPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                '¿Aún no tienes una cuenta?',
+                                '¿Aún no tienes una cuenta? Registrate ahora',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14.0,

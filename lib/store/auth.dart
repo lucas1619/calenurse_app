@@ -9,6 +9,7 @@ class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
       email: 'enfermera@acalenurse.pe',
       type: 'Nurse',
       area: 'Ginecologia',
+      areaId: '',
       photoUrl:
           'https://media.licdn.com/dms/image/C4E03AQHRj-FW4YyW0w/profile-displayphoto-shrink_200_200/0/1656041131139?e=2147483647&v=beta&t=XJvJbfhzzAJDAMAGngiEbfB0hcQ99vQP6OjO76HrsaI');
 
@@ -21,6 +22,7 @@ class AuthStore with ChangeNotifier, DiagnosticableTreeMixin {
     _user.type = user.type;
     _user.area = user.area;
     _user.photoUrl = user.photoUrl;
+    _user.areaId = user.areaId;
     notifyListeners();
   }
 

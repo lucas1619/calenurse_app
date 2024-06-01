@@ -1,4 +1,5 @@
 import 'package:calenurse_app/domain/shift/shift_enum.dart';
+import 'package:intl/intl.dart';
 
 class GeneratedShift {
   String id;
@@ -14,6 +15,13 @@ class GeneratedShift {
       shift: ShiftEnum.values
           .firstWhere((e) => e.toString() == 'ShiftEnum.${json['shift']}'),
     );
+  }
+
+  @override
+  String toString() {
+    String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+    String translated = translateShiftToSpanish(shift);
+    return '$formattedDate - $translated'; // Or return any other string representation you prefer
   }
 
   @override

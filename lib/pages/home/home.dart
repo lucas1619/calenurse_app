@@ -1,6 +1,5 @@
 import 'package:calenurse_app/domain/shift/generated_shift.dart';
 import 'package:calenurse_app/domain/shift/shift_enum.dart';
-import 'package:calenurse_app/services/api.dart';
 import 'package:calenurse_app/services/shift_service.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<GeneratedShift> shifts = [
-    GeneratedShift(
-        date: DateTime.now(), id: "asdasd-asdas-asdas", shift: ShiftEnum.day)
-  ];
+  List<GeneratedShift> shifts = [];
   DateTime selectedDate = DateTime.now();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -34,6 +31,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> onChangeDate(DateTime date, String nurseId) async {
+    setState(() {
+      _isLoading = true;
+    });
     ShiftService shiftService = ShiftService();
     List<GeneratedShift> loadedShifts =
         await shiftService.getShift(nurseId, date);
@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     });
     setState(() {
       shifts = loadedShifts;
+      _isLoading = false;
     });
   }
 
@@ -86,19 +87,21 @@ class _HomePageState extends State<HomePage> {
                     selectionColor: const Color.fromRGBO(72, 148, 254, 1),
                     selectedTextColor: Colors.white,
                     dateTextStyle: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                    ),
                     monthTextStyle: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                    ),
                     onDateChange: (date) =>
-                        {onChangeDate(date, authStore.user.id)},
+                        onChangeDate(date, authStore.user.id),
                   ),
                   const SizedBox(height: 20.0),
                   const Text(
-                    'Horario semanal',
+                    'Horario',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18.0,
@@ -107,19 +110,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  // scrollable list of schedules
                   Expanded(
-                    child: ListView(
-                      children: shifts
-                          .map((
-                            e,
-                          ) =>
-                              ScheduleCardNurse(
-                                shift: e,
-                                key: Key(e.id),
-                              ))
-                          .toList(),
-                    ),
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : shifts.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No schedules available for this date',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              )
+                            : ListView(
+                                children: shifts
+                                    .map((e) => ScheduleCardNurse(
+                                          shift: e,
+                                          key: Key(e.id),
+                                        ))
+                                    .toList(),
+                              ),
                   ),
                 ],
               ),

@@ -43,10 +43,10 @@ class RocioNavigationBarState extends State<RocioNavigationBar> {
                 icon: Icons.calendar_month_outlined,
                 text: 'Schedule',
               ),
-              GButton(
-                icon: Icons.notifications_none_outlined,
-                text: 'Notifications',
-              ),
+              // GButton(
+              //   icon: Icons.notifications_none_outlined,
+              //   text: 'Notifications',
+              // ),
               GButton(
                 icon: Icons.person_outline,
                 text: 'Profile',

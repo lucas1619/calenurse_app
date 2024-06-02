@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:calenurse_app/domain/area/area.dart';
 import 'package:calenurse_app/services/area_service.dart';
 import 'package:calenurse_app/services/auth_service.dart';
@@ -82,12 +84,20 @@ class _SignupPageState extends State<SignupPage> {
 
     AuthService authService = AuthService();
     final response = await authService.register(body);
-    if (response) {
+    if (response.statusCode == 201) {
       Navigator.pushNamed(context, '/login');
-    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Error al registrar el usuario'),
+          content: Text('Registro exitoso'),
+          backgroundColor: Colors.green, // Red background to indicate danger
+        ),
+      );
+    } else if (response.statusCode.toString().startsWith('4')) {
+      final parsedJson = json.decode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(parsedJson['message']),
+          backgroundColor: Colors.red, // Red background to indicate danger
         ),
       );
     }

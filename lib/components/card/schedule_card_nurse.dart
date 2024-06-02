@@ -2,6 +2,7 @@ import 'package:calenurse_app/components/select/primary_select.dart';
 import 'package:calenurse_app/domain/area/area_nurse.dart';
 import 'package:calenurse_app/domain/shift/shift_enum.dart';
 import 'package:calenurse_app/services/area_service.dart';
+import 'package:calenurse_app/services/shift_service.dart';
 import 'package:calenurse_app/store/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,8 @@ class ScheduleCardNurse extends StatefulWidget {
 
 class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
   List<AreaNurse> substituteNurses = [AreaNurse(id: '', name: '')];
+  List<GeneratedShift> shiftsFromSelectedUser = [];
+
   AreaNurse substitute = AreaNurse(id: '', name: '');
   late AuthStore authStore;
   late AreaService areaService;
@@ -27,19 +30,29 @@ class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
     super.initState();
     authStore = Provider.of<AuthStore>(context, listen: false);
     areaService = AreaService();
-    fetchSubstituteNurses();
+    fetchSubstituteNurses(initial: true);
   }
 
-  void fetchSubstituteNurses() {
-    areaService
-        .getAllUsersFromArea(authStore.user.areaId, authStore.user.id)
-        .then((value) {
-      setState(() {
-        substituteNurses = value;
-        if (value.isNotEmpty) {
-          substitute = value[0];
-        }
-      });
+  Future<void> fetchSubstituteNurses({bool initial = false}) async {
+    var value = await areaService.getAllUsersFromArea(
+        authStore.user.areaId, authStore.user.id);
+    setState(() {
+      substituteNurses = value;
+    });
+    if (value.isNotEmpty) {
+      substitute = value[0];
+      if (initial) {
+        await fetchShiftsFromSelectedUser(value[0].id);
+      }
+    }
+  }
+
+  Future<void> fetchShiftsFromSelectedUser(String nurseId) async {
+    ShiftService shiftService = ShiftService();
+    List<GeneratedShift> result = await shiftService.getAssignedShiftsFromDate(
+        nurseId, widget.shift.date);
+    setState(() {
+      shiftsFromSelectedUser = result;
     });
   }
 
@@ -107,7 +120,9 @@ class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
                           context: context,
                           builder: (context) => SubstituteBottomSheet(
                             substituteNurses: substituteNurses,
+                            shiftsFromSelectedUser: shiftsFromSelectedUser,
                             onSubstituteChanged: (value) {
+                              fetchShiftsFromSelectedUser(value.id);
                               setState(() {
                                 substitute = value;
                               });
@@ -134,12 +149,14 @@ class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
 
 class SubstituteBottomSheet extends StatefulWidget {
   final List<AreaNurse> substituteNurses;
+  final List<GeneratedShift> shiftsFromSelectedUser;
   final Function(AreaNurse) onSubstituteChanged;
 
   const SubstituteBottomSheet({
     Key? key,
     required this.substituteNurses,
     required this.onSubstituteChanged,
+    required this.shiftsFromSelectedUser,
   }) : super(key: key);
 
   @override
@@ -148,6 +165,7 @@ class SubstituteBottomSheet extends StatefulWidget {
 
 class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
   late AreaNurse selectedSubstitute;
+  late GeneratedShift selectedTargetShift;
 
   @override
   void initState() {
@@ -155,6 +173,9 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
     selectedSubstitute = widget.substituteNurses.isNotEmpty
         ? widget.substituteNurses[0]
         : AreaNurse(id: '', name: '');
+    selectedTargetShift = widget.shiftsFromSelectedUser.isNotEmpty
+        ? widget.shiftsFromSelectedUser[0]
+        : GeneratedShift(id: '', date: DateTime.now(), shift: ShiftEnum.day);
   }
 
   @override
@@ -173,7 +194,7 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Solicitar cambio de horario',
+            'Solicitar intercambio de horario',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -193,12 +214,11 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
           ),
           const SizedBox(height: 16),
           PrimarySelect(
-            value: selectedSubstitute,
-            items: widget.substituteNurses,
+            value: selectedTargetShift,
+            items: widget.shiftsFromSelectedUser,
             onChanged: (value) {
               setState(() {
-                selectedSubstitute = value!;
-                widget.onSubstituteChanged(value);
+                selectedTargetShift = value!;
               });
             },
           ),
@@ -211,7 +231,7 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
               elevation: 0,
               onPressed: () {},
               label: const Text(
-                'Enviar cambio de horario',
+                'Solicitar intercambio',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,

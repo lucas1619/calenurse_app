@@ -104,8 +104,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content:
-                                      Text('Turno enviado correctamente'),
+                                  content: Text('Turno enviado correctamente'),
                                   backgroundColor: Color(0xff4894FE),
                                 ),
                               ),
@@ -138,11 +137,14 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   void _pickDateDialog() {
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
     showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1950),
-            lastDate: DateTime(2030))
+            initialDate: now,
+            firstDate: startOfWeek,
+            lastDate: endOfWeek)
         .then((pickedDate) {
       //then usually do the future job
       if (pickedDate != null) {

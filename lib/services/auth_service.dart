@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:calenurse_app/services/api.dart';
 import 'package:calenurse_app/domain/user/user.dart';
+import 'package:http/http.dart';
 
 class AuthService {
   Api api = Api();
@@ -22,11 +23,8 @@ class AuthService {
     }
   }
 
-  Future<bool> register(Map<String, Object> body) async {
+  Future<Response> register(Map<String, Object> body) async {
     final response = await api.post('/auth/signup', body);
-    if (response.statusCode == 201) {
-      return true;
-    }
-    return false;
+    return response;
   }
 }

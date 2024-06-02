@@ -173,7 +173,7 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Solicitar Cambio',
+            'Solicitar cambio de horario',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -211,7 +211,7 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
               elevation: 0,
               onPressed: () {},
               label: const Text(
-                'Solicitar',
+                'Enviar cambio de horario',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,

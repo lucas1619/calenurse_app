@@ -105,7 +105,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content:
-                                      Text('Horario solicitado correctamente'),
+                                      Text('Turno enviado correctamente'),
                                   backgroundColor: Color(0xff4894FE),
                                 ),
                               ),
@@ -122,7 +122,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             }
                         });
                   },
-                  label: const Text('Crear horario',
+                  label: const Text('Enviar turno',
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

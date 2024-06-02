@@ -94,13 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 12,
                 ),
-                PrimaryButton(
-                  label: 'Cambiar contraseña',
-                  action: (BuildContext context) {
-                    // save data
-                  },
-                  parentContext: context,
-                ),
               ],
             ),
           ],

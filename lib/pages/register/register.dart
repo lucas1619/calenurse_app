@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:calenurse_app/domain/area/area.dart';
 import 'package:calenurse_app/services/area_service.dart';
 import 'package:calenurse_app/services/auth_service.dart';
@@ -53,23 +55,49 @@ class _SignupPageState extends State<SignupPage> {
     final password = _passwordController.text;
     final isBoss = type == 'Jefa de Enfermera';
     final areaId = special.id;
+
+    // Check if any field is empty
+    if (name.isEmpty ||
+        username.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        areaId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Todos los campos son obligatorios'),
+          backgroundColor: Colors.red, // Red background to indicate danger
+        ),
+      );
+      return;
+    }
+
     final body = {
       'username': username,
       'password': password,
       'name': name,
-      'age': 20,
+      'age':
+          20, // Consider making age a variable if it's part of the user input
       'email': email,
       'isBoss': isBoss,
       'areaId': areaId,
     };
+
     AuthService authService = AuthService();
     final response = await authService.register(body);
-    if (response) {
+    if (response.statusCode == 201) {
       Navigator.pushNamed(context, '/login');
-    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Error al registrar el usuario'),
+          content: Text('Registro exitoso'),
+          backgroundColor: Colors.green, // Red background to indicate danger
+        ),
+      );
+    } else if (response.statusCode.toString().startsWith('4')) {
+      final parsedJson = json.decode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(parsedJson['message']),
+          backgroundColor: Colors.red, // Red background to indicate danger
         ),
       );
     }
@@ -155,7 +183,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             const SizedBox(height: 16.0),
                             PrimaryButton(
-                              action: _register,
+                              action: _register, // Pass context to _register
                               label: 'Registrate',
                               parentContext: context,
                             ),

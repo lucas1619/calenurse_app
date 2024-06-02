@@ -19,7 +19,7 @@ class GeneratedShift {
 
   @override
   String toString() {
-    String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+    String formattedDate = DateFormat('dd/MM/yyyy').format(date);
     String translated = translateShiftToSpanish(shift);
     return '$formattedDate - $translated'; // Or return any other string representation you prefer
   }

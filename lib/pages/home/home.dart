@@ -1,5 +1,4 @@
 import 'package:calenurse_app/domain/shift/generated_shift.dart';
-import 'package:calenurse_app/domain/shift/shift_enum.dart';
 import 'package:calenurse_app/services/shift_service.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';

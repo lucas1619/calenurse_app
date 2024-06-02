@@ -53,15 +53,33 @@ class _SignupPageState extends State<SignupPage> {
     final password = _passwordController.text;
     final isBoss = type == 'Jefa de Enfermera';
     final areaId = special.id;
+
+    // Check if any field is empty
+    if (name.isEmpty ||
+        username.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        areaId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Todos los campos son obligatorios'),
+          backgroundColor: Colors.red, // Red background to indicate danger
+        ),
+      );
+      return;
+    }
+
     final body = {
       'username': username,
       'password': password,
       'name': name,
-      'age': 20,
+      'age':
+          20, // Consider making age a variable if it's part of the user input
       'email': email,
       'isBoss': isBoss,
       'areaId': areaId,
     };
+
     AuthService authService = AuthService();
     final response = await authService.register(body);
     if (response) {
@@ -155,7 +173,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             const SizedBox(height: 16.0),
                             PrimaryButton(
-                              action: _register,
+                              action: _register, // Pass context to _register
                               label: 'Registrate',
                               parentContext: context,
                             ),

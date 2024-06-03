@@ -12,8 +12,8 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
   final lastScheduleCtrl =
       TextEditingController(text: '13/05/2023 - 00:00-08:00');
   final newScheduleCtrl =
-      TextEditingController(text: '14/05/2023 - 16:00-00:00');
-  final standCtrl = TextEditingController(text: 'Alicia Rojas');
+      TextEditingController(text: '05/06/2023 - 16:00-00:00');
+  final standCtrl = TextEditingController(text: 'Katerin');
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Eliana Torres',
+              'Dana',
               style: TextStyle(
                 color: Color(0xFF264A7D),
                 fontSize: 20,

@@ -31,7 +31,7 @@ class _ScheduleBossSolsTabState extends State<ScheduleBossSolsTab> {
               child: ListView.separated(
                 itemBuilder: (context, i) => const ScheduleBossCard(),
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemCount: 5,
+                itemCount: 1,
               ),
             )
           ],

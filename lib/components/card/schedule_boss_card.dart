@@ -14,7 +14,7 @@ class ScheduleBossCard extends StatelessWidget {
         borderSide: BorderSide.none,
       ),
       title: const Text(
-        'Eliana Torres',
+        'Dana',
         style: TextStyle(
           color: Color(0xFF264A7D),
           fontSize: 13,

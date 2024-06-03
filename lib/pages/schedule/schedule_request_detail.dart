@@ -44,19 +44,19 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
                 fontFamily: 'Poppins',
               ),
             ),
-            const SizedBox(height: 24),
-            const Text("Turno anterior",
-                style: TextStyle(
-                    color: Color(0xFF264A7D),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                    fontSize: 16)),
-            PrimaryTextField(
-              controller: lastScheduleCtrl,
-              labelText: '',
-              hintText: '',
-              numeric: true,
-            ),
+            // const SizedBox(height: 24),
+            // const Text("Turno anterior",
+            //     style: TextStyle(
+            //         color: Color(0xFF264A7D),
+            //         fontWeight: FontWeight.bold,
+            //         fontFamily: 'Poppins',
+            //         fontSize: 16)),
+            // PrimaryTextField(
+            //   controller: lastScheduleCtrl,
+            //   labelText: '',
+            //   hintText: '',
+            //   numeric: true,
+            // ),
             const SizedBox(height: 24),
             const Text("Nuevo turno",
                 style: TextStyle(

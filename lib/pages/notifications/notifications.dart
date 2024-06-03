@@ -18,9 +18,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final authStore = Provider.of<AuthStore>(context);
 
     return Scaffold(
-      bottomNavigationBar: const RocioNavigationBar(
-        selectedIndex: 2,
-      ),
+      // bottomNavigationBar: const RocioNavigationBar(
+      //   selectedIndex: 2,
+      // ),
       body: Padding(
         padding:
             const EdgeInsets.only(top: 20, left: 24, right: 24, bottom: 20),

@@ -67,9 +67,11 @@ class RocioNavigationBarState extends State<RocioNavigationBar> {
                   } else {
                     Navigator.pushNamed(context, ScheduleBossPage.route);
                   }
-                // } else if (index == 2) {
+                } 
+                // else if (index == 2) {
                 //   Navigator.pushNamed(context, '/notifications');
-                } else if (index == 2) {
+                // } 
+                else if (index == 2) {
                   Navigator.pushNamed(context, '/profile');
                 }
               });

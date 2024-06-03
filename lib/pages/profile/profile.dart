@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       bottomNavigationBar: const RocioNavigationBar(
-        selectedIndex: 3,
+        selectedIndex: 2,
       ),
       body: Padding(
         padding:

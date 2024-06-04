@@ -21,3 +21,20 @@ String translateShiftToSpanish(ShiftEnum shift) {
       return ''; // Handle other cases if necessary
   }
 }
+
+extension ShiftEnumExtension on String {
+  ShiftEnum toShiftEnum() {
+    switch (this) {
+      case 'day':
+        return ShiftEnum.day;
+      case 'evening':
+        return ShiftEnum.evening;
+      case 'night':
+        return ShiftEnum.night;
+      case 'free':
+        return ShiftEnum.free;
+      default:
+        throw Exception('Invalid shift type');
+    }
+  }
+}

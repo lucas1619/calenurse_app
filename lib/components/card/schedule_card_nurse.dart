@@ -121,6 +121,7 @@ class _ScheduleCardNurseState extends State<ScheduleCardNurse> {
                           builder: (context) => SubstituteBottomSheet(
                             substituteNurses: substituteNurses,
                             shiftsFromSelectedUser: shiftsFromSelectedUser,
+                            shift: widget.shift,
                             onSubstituteChanged: (value) {
                               fetchShiftsFromSelectedUser(value.id);
                               setState(() {
@@ -151,13 +152,15 @@ class SubstituteBottomSheet extends StatefulWidget {
   final List<AreaNurse> substituteNurses;
   final List<GeneratedShift> shiftsFromSelectedUser;
   final Function(AreaNurse) onSubstituteChanged;
+  final GeneratedShift shift;
 
-  const SubstituteBottomSheet({
-    Key? key,
-    required this.substituteNurses,
-    required this.onSubstituteChanged,
-    required this.shiftsFromSelectedUser,
-  }) : super(key: key);
+  const SubstituteBottomSheet(
+      {Key? key,
+      required this.substituteNurses,
+      required this.onSubstituteChanged,
+      required this.shiftsFromSelectedUser,
+      required this.shift})
+      : super(key: key);
 
   @override
   _SubstituteBottomSheetState createState() => _SubstituteBottomSheetState();
@@ -166,6 +169,29 @@ class SubstituteBottomSheet extends StatefulWidget {
 class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
   late AreaNurse selectedSubstitute;
   late GeneratedShift selectedTargetShift;
+
+  Future<void> onPressButton(BuildContext context) async {
+    ShiftService shiftService = ShiftService();
+    bool response = await shiftService.postShiftExchange(
+        widget.shift.id, selectedTargetShift.id);
+    if (response) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Solicitud enviada exitosamente, contacte con su jefe de area.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ocurrio un error, intentelo nuevamente'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -229,7 +255,9 @@ class _SubstituteBottomSheetState extends State<SubstituteBottomSheet> {
               heroTag: UniqueKey(),
               backgroundColor: const Color(0xff4894FE),
               elevation: 0,
-              onPressed: () {},
+              onPressed: () {
+                onPressButton(context);
+              },
               label: const Text(
                 'Solicitar intercambio',
                 style: TextStyle(

@@ -16,6 +16,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -70,6 +71,39 @@ class _SignupPageState extends State<SignupPage> {
       );
       return;
     }
+     // Validación específica para el nombre (solo letras)
+if (!RegExp(r'^[a-zA-Z ]{2,}$').hasMatch(name)) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('El nombre debe contener al menos dos letras'),
+      backgroundColor: Colors.red,
+    ),
+  );
+  return;
+}
+
+// Validación específica para el email (debe contener '@')
+if (!email.contains('@')) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Ingrese un correo válido'),
+      backgroundColor: Colors.red,
+    ),
+  );
+  return;
+} 
+  // Validación específica para la contraseña
+  if (!_validatePassword(password)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('La contraseña debe tener al menos 8 caracteres, incluir números, letras y un carácter especial'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return;
+  }
+
+
 
     final body = {
       'username': username,
@@ -102,7 +136,11 @@ class _SignupPageState extends State<SignupPage> {
       );
     }
   }
-
+bool _validatePassword(String value) {
+  String pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\$@\$!%*?&])[A-Za-z\d\$@\$!%*?&]{8,}';
+  RegExp regExp = RegExp(pattern);
+  return regExp.hasMatch(value);
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

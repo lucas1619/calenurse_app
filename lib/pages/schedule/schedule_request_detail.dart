@@ -1,5 +1,8 @@
-import 'package:calenurse_app/components/text_field/primary_text_field.dart';
+import 'package:calenurse_app/domain/shift/exchange_shift.dart';
+import 'package:calenurse_app/domain/shift/shift_enum.dart';
+import 'package:calenurse_app/services/shift_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ScheduleRequestDetail extends StatefulWidget {
   const ScheduleRequestDetail({super.key});
@@ -9,14 +12,24 @@ class ScheduleRequestDetail extends StatefulWidget {
 }
 
 class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
-  final lastScheduleCtrl =
-      TextEditingController(text: '13/05/2023 - 00:00-08:00');
-  final newScheduleCtrl =
-      TextEditingController(text: '05/06/2023 - 16:00-00:00');
-  final standCtrl = TextEditingController(text: 'Katerin');
+  late ExchangeShift exchangeShift;
+  late ShiftService shiftService;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    exchangeShift = ModalRoute.of(context)!.settings.arguments as ExchangeShift;
+    shiftService = ShiftService();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd/MM/yyyy');
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -33,55 +46,83 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Text(
-              'Dana',
-              style: TextStyle(
-                color: Color(0xFF264A7D),
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            // const SizedBox(height: 24),
-            // const Text("Turno anterior",
-            //     style: TextStyle(
-            //         color: Color(0xFF264A7D),
-            //         fontWeight: FontWeight.bold,
-            //         fontFamily: 'Poppins',
-            //         fontSize: 16)),
-            // PrimaryTextField(
-            //   controller: lastScheduleCtrl,
-            //   labelText: '',
-            //   hintText: '',
-            //   numeric: true,
-            // ),
-            const SizedBox(height: 24),
-            const Text("Nuevo turno",
-                style: TextStyle(
-                    color: Color(0xFF264A7D),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                    fontSize: 16)),
-            PrimaryTextField(
-              controller: newScheduleCtrl,
-              labelText: '',
-              hintText: '',
-              numeric: true,
-            ),
-            const SizedBox(height: 24),
-            const Text("Suplente",
-                style: TextStyle(
-                    color: Color(0xFF264A7D),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                    fontSize: 16)),
-            PrimaryTextField(
-              controller: standCtrl,
-              labelText: '',
-              hintText: '',
-              numeric: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      exchangeShift.shiftA.nurseName,
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      translateShiftToSpanish(
+                          exchangeShift.shiftA.shift.toShiftEnum()),
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      dateFormat.format(exchangeShift.shiftA.date),
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ],
+                ),
+                const Icon(
+                  Icons.compare_arrows_outlined,
+                  size: 40,
+                  color: Colors.blue, // Establecer el color del ícono
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      exchangeShift.shiftB.nurseName,
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      translateShiftToSpanish(
+                          exchangeShift.shiftB.shift.toShiftEnum()),
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      dateFormat.format(exchangeShift.shiftB.date),
+                      style: const TextStyle(
+                        color: Color(0xFF264A7D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             const Spacer(),
             SizedBox(
@@ -94,13 +135,24 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
                   borderSide: const BorderSide(color: Colors.red, width: 2),
                 ),
                 elevation: 0,
-                onPressed: () {},
-                label: const Text('Rechazar solicitud',
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Poppins',
-                        fontSize: 16)),
+                onPressed: () {
+                  shiftService
+                      .putShiftExchangeDecline(exchangeShift.id)
+                      .then((value) {
+                    if (value) {
+                      Navigator.pushNamed(context, '/home_boss');
+                    }
+                  });
+                },
+                label: const Text(
+                  'Rechazar solicitud',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -110,13 +162,24 @@ class _ScheduleRequestDetailState extends State<ScheduleRequestDetail> {
                 heroTag: UniqueKey(),
                 backgroundColor: const Color(0xff4894FE),
                 elevation: 0,
-                onPressed: () {},
-                label: const Text('Aceptar solicitud',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Poppins',
-                        fontSize: 16)),
+                onPressed: () {
+                  shiftService
+                      .putShiftExchangeAccept(exchangeShift.id)
+                      .then((value) {
+                    if (value) {
+                      Navigator.pushNamed(context, '/home_boss');
+                    }
+                  });
+                },
+                label: const Text(
+                  'Aceptar solicitud',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ],

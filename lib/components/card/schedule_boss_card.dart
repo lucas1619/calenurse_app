@@ -1,21 +1,26 @@
+import 'package:calenurse_app/domain/shift/exchange_shift.dart';
 import 'package:calenurse_app/pages/schedule/schedule_request_detail.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleBossCard extends StatelessWidget {
-  const ScheduleBossCard({super.key});
+  final ExchangeShift exchangeShift;
+  const ScheduleBossCard({super.key, required this.exchangeShift});
 
   @override
   Widget build(BuildContext context) {
+    String title =
+        '${exchangeShift.shiftA.nurseName} <-> ${exchangeShift.shiftB.nurseName}';
     return ListTile(
-      onTap: () => Navigator.pushNamed(context, ScheduleRequestDetail.route),
+      onTap: () => Navigator.pushNamed(context, ScheduleRequestDetail.route,
+          arguments: exchangeShift),
       tileColor: const Color(0xffE9F3FF),
       shape: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide.none,
       ),
-      title: const Text(
-        'Dana',
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           color: Color(0xFF264A7D),
           fontSize: 13,
           fontWeight: FontWeight.w500,
